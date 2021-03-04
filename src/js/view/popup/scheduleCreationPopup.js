@@ -38,6 +38,7 @@ function ScheduleCreationPopup(container, calendars, usageStatistics) {
      */
     this._viewModel = null;
     this._selectedCal = null;
+    this._selectedTitle = null;
     this._schedule = null;
     this.calendars = calendars;
     this._focusedDropdown = null;
@@ -187,6 +188,10 @@ ScheduleCreationPopup.prototype._selectDropdownMenuItem = function(target) {
         });
     }
 
+    if (domutil.hasClass(dropdown, config.classname('section-title'))) {
+        this._selectedTitle = document.getElementById('tui-full-calendar-schedule-title').innerText;
+    }
+
     domutil.removeClass(dropdown, config.classname('open'));
 
     return true;
@@ -244,40 +249,26 @@ ScheduleCreationPopup.prototype._toggleIsPrivate = function(target) {
 ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
-    var title;
     var startDate;
-    var endDate;
-    var rangeDate;
     var form;
-    var isAllDay;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
         return false;
     }
 
-    title = domutil.get(cssPrefix + 'schedule-title');
-
     startDate = new TZDate(this.rangePicker.getStartDate());
-    endDate = new TZDate(this.rangePicker.getEndDate());
 
-    if (!this._validateForm(title, startDate, endDate)) {
-        if (!title.value) {
-            title.focus();
-        }
-
+    if (!this._validateForm(this._selectedTitle, startDate)) {
         return false;
     }
 
-    isAllDay = !!domutil.get(cssPrefix + 'schedule-allday').checked;
-    rangeDate = this._getRangeDate(startDate, endDate, isAllDay);
-
     form = {
         calendarId: this._selectedCal ? this._selectedCal.id : null,
-        title: title,
+        title: this._selectedTitle ? this._selectedTitle : null,
         location: domutil.get(cssPrefix + 'schedule-location'),
-        start: rangeDate.start,
-        end: rangeDate.end,
-        isAllDay: isAllDay,
+        start: startDate,
+        end: startDate,
+        isAllDay: true,
         state: domutil.get(cssPrefix + 'schedule-state').innerText,
         isPrivate: !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'))
     };
@@ -653,16 +644,12 @@ ScheduleCreationPopup.prototype.setCalendars = function(calendars) {
  * @param {TZDate} endDate end date time from range picker
  * @returns {boolean} Returns false if the form is not valid for submission.
  */
-ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDate) {
-    if (!title.value) {
+ScheduleCreationPopup.prototype._validateForm = function(title, startDate) {
+    if (!title) {
         return false;
     }
 
-    if (!startDate && !endDate) {
-        return false;
-    }
-
-    if (datetime.compare(startDate, endDate) === 1) {
+    if (!startDate) {
         return false;
     }
 
@@ -711,7 +698,7 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
         ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
         {
             calendarId: form.calendarId,
-            title: form.title.value,
+            title: form.title,
             location: form.location.value,
             start: form.start,
             end: form.end,
@@ -760,7 +747,7 @@ ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
      */
     this.fire('beforeCreateSchedule', {
         calendarId: form.calendarId,
-        title: form.title.value,
+        title: form.title,
         location: form.location.value,
         raw: {
             class: form.isPrivate ? 'private' : 'public'

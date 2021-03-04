@@ -15,16 +15,31 @@
                 {{/each}}
             </ul>
         </div>
-        <div class="{{CSS_PREFIX}}popup-section">
-            <div class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-title">
-            <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-title"></span>
-                <input id="{{CSS_PREFIX}}schedule-title" class="{{CSS_PREFIX}}content" placeholder="{{titlePlaceholder-tmpl}}" value="{{title}}">
-            </div>
-            <button id="{{CSS_PREFIX}}schedule-private" class="{{CSS_PREFIX}}button {{CSS_PREFIX}}section-private{{#unless isPrivate}} {{CSS_PREFIX}}public{{/unless}}">
+        <div class="{{CSS_PREFIX}}popup-section {{CSS_PREFIX}}dropdown {{CSS_PREFIX}}close {{CSS_PREFIX}}section-title">
+            <button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}dropdown-button {{CSS_PREFIX}}popup-section-item">
+                <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}calendar-dot"></span>
+                <span id="{{CSS_PREFIX}}schedule-title" class="{{CSS_PREFIX}}content">{{#if title}}{{title}}{{else}}{{{titlePlaceholder-tmpl}}}{{/if}}</span>
+                <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}dropdown-arrow"></span>
+            </button>
+            <ul class="{{CSS_PREFIX}}dropdown-menu" style="z-index: {{zIndex}}">
+              <li class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}dropdown-menu-item">
+                  <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}calendar-dot"></span>
+                  <span class="{{CSS_PREFIX}}content">POES</span>
+              </li>
+              <li class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}dropdown-menu-item">
+                  <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}calendar-dot"></span>
+                  <span class="{{CSS_PREFIX}}content">HACCP</span>
+              </li>
+              <li class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}dropdown-menu-item">
+                  <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}calendar-dot"></span>
+                  <span class="{{CSS_PREFIX}}content">SPS</span>
+              </li>
+            </ul>
+            <button style="display: none;" id="{{CSS_PREFIX}}schedule-private" class="{{CSS_PREFIX}}button {{CSS_PREFIX}}section-private{{#unless isPrivate}} {{CSS_PREFIX}}public{{/unless}}">
             <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-private"></span>
             </button>
         </div>
-        <div class="{{CSS_PREFIX}}popup-section">
+        <div style="display: none;" class="{{CSS_PREFIX}}popup-section">
             <div class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-location">
             <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-location"></span>
                 <input id="{{CSS_PREFIX}}schedule-location" class="{{CSS_PREFIX}}content" placeholder="{{locationPlaceholder-tmpl}}" value="{{location}}">
@@ -36,19 +51,16 @@
                 <input id="{{CSS_PREFIX}}schedule-start-date" class="{{CSS_PREFIX}}content" placeholder="{{startDatePlaceholder-tmpl}}">
                 <div id="{{CSS_PREFIX}}startpicker-container" style="margin-left: -1px; position: relative"></div>
             </div>
-            <span class="{{CSS_PREFIX}}section-date-dash">-</span>
-            <div class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-end-date">
+            <div style="display: none !important" class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-end-date">
                 <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-date"></span>
                 <input id="{{CSS_PREFIX}}schedule-end-date" class="{{CSS_PREFIX}}content" placeholder="{{endDatePlaceholder-tmpl}}">
                 <div id="{{CSS_PREFIX}}endpicker-container" style="margin-left: -1px; position: relative"></div>
             </div>
-            <div class="{{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-allday">
-                <input id="{{CSS_PREFIX}}schedule-allday" type="checkbox" class="{{CSS_PREFIX}}checkbox-square"{{#if isAllDay}} checked{{/if}}>
-                <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-checkbox"></span>
-                <span class="{{CSS_PREFIX}}content">{{{popupIsAllDay-tmpl}}}</span>
+            <div class="hidden {{CSS_PREFIX}}popup-section-item {{CSS_PREFIX}}section-allday">
+                <input id="{{CSS_PREFIX}}schedule-allday" type="checkbox" class="{{CSS_PREFIX}}checkbox-square" checked>
             </div>
         </div>
-        <div class="{{CSS_PREFIX}}popup-section {{CSS_PREFIX}}dropdown {{CSS_PREFIX}}close {{CSS_PREFIX}}section-state">
+        <div style="display: none;" class="{{CSS_PREFIX}}popup-section {{CSS_PREFIX}}dropdown {{CSS_PREFIX}}close {{CSS_PREFIX}}section-state">
             <button class="{{CSS_PREFIX}}button {{CSS_PREFIX}}dropdown-button {{CSS_PREFIX}}popup-section-item">
                 <span class="{{CSS_PREFIX}}icon {{CSS_PREFIX}}ic-state"></span>
                 <span id="{{CSS_PREFIX}}schedule-state" class="{{CSS_PREFIX}}content">{{#if state}}{{state}}{{else}}{{{popupStateBusy-tmpl}}}{{/if}}</span>
