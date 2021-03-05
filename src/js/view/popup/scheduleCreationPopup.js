@@ -250,6 +250,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     var className = config.classname('popup-save');
     var cssPrefix = config.cssPrefix;
     var startDate;
+    var endDate;
+    var rangeDate;
     var form;
 
     if (!domutil.hasClass(target, className) && !domutil.closest(target, '.' + className)) {
@@ -257,8 +259,10 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
     }
 
     startDate = new TZDate(this.rangePicker.getStartDate());
+    endDate = new TZDate(this.rangePicker.getEndDate());
+    rangeDate = this._getRangeDate(startDate, endDate, true);
 
-    if (!this._validateForm(this._selectedTitle, startDate)) {
+    if (!this._validateForm(this._selectedTitle, startDate, endDate)) {
         return false;
     }
 
@@ -266,8 +270,8 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
         calendarId: this._selectedCal ? this._selectedCal.id : null,
         title: this._selectedTitle ? this._selectedTitle : null,
         location: domutil.get(cssPrefix + 'schedule-location'),
-        start: startDate,
-        end: startDate,
+        start: rangeDate.start,
+        end: rangeDate.end,
         isAllDay: true,
         state: domutil.get(cssPrefix + 'schedule-state').innerText,
         isPrivate: !domutil.hasClass(domutil.get(cssPrefix + 'schedule-private'), config.classname('public'))
@@ -644,12 +648,12 @@ ScheduleCreationPopup.prototype.setCalendars = function(calendars) {
  * @param {TZDate} endDate end date time from range picker
  * @returns {boolean} Returns false if the form is not valid for submission.
  */
-ScheduleCreationPopup.prototype._validateForm = function(title, startDate) {
+ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDate) {
     if (!title) {
         return false;
     }
 
-    if (!startDate) {
+    if (!startDate && !endDate) {
         return false;
     }
 
